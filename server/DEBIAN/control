@@ -1,0 +1,8 @@
+Package: fk-mysql-slow-rotate
+Version: 1._VERSION_
+Section: web
+Priority: optional
+Architecture: all
+Depends: logrotate, adduser
+Provides: fk-mysql-slow-rotate
+Maintainer: MySQL SME Team <phincy.l@domain.com>

@@ -1,0 +1,37 @@
+#!/bin/bash
+set -x
+echo "Doing prechecks"
+echo
+if [ -d /etc/logrotate.d ]
+then
+        for file in `ls -1 /etc/logrotate.d/`
+        do
+                grep -i mysql /etc/logrotate.d/$file| grep -i slow >/dev/null 2>&1
+                if [ $? == 0  ]
+                then
+                        mkdir -p /etc/etc/logrotate.d-bkp
+                        mv /etc/logrotate.d/$file /etc/etc/logrotate.d-bkp/
+                fi
+        done
+        /bin/cp -p /etc/mydash_configs/mysql_slow /etc/logrotate.d/    # remmeber.. this is a plan B if mydash didnt trigger rotate for morethan 1 week
+        chown root:root /etc/logrotate.d/mysql_slow
+fi
+id fk-mysql-deployer >/dev/null 2>&1
+if [ $? == 0 ]
+then
+        /usr/sbin/usermod -G adm fk-mysql-deployer
+        mkdir -p /home/fk-mysql-deployer/.ssh
+        chmod 700 /home/fk-mysql-deployer/.ssh
+        echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOqo4cvKHThQyPBTkl0ppTME0MD5h8jTi/4/mXJyX62fkbUynUpPeWhv1kBYhixEEH78wWGzWYBhuZki9uGSgWi7KgFI7FYrPhWY9b4Mt8IzOqrwS6xrQ2Z0O8r8zsj+ujxlp3+azELMl3xTorDFMInkUHqPcCGAXfNNK0zdMaZQ5l6BcL6vpPEAgGQlE+4eFf6NFxbCAXVeoL//Cw6FmTo3BXJiAKwXhA1yDqOHAdhc1Ko8zeSam3Vy6sF38+AdNFAOZOwfQHHttEcdKcYlN+i55zZ6i1mMi4D8MfGTppiEF5TEWhVkShQpdVoFeRMaJCsHkNxQy9t8bMMivJmFkz fk-mysql-deployer@debian" >> /home/fk-mysql-deployer/.ssh/authorized_keys
+        chown -R fk-mysql-deployer /home/fk-mysql-deployer
+        chmod 400 /home/fk-mysql-deployer/.ssh/authorized_keys
+else
+        /usr/sbin/groupadd fk-mysql-deployer
+        /usr/sbin/useradd -m -G  adm,fk-mysql-deployer fk-mysql-deployer
+        mkdir -p /home/fk-mysql-deployer/.ssh
+        chmod 700 /home/fk-mysql-deployer/.ssh
+        echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOqo4cvKHThQyPBTkl0ppTME0MD5h8jTi/4/mXJyX62fkbUynUpPeWhv1kBYhixEEH78wWGzWYBhuZki9uGSgWi7KgFI7FYrPhWY9b4Mt8IzOqrwS6xrQ2Z0O8r8zsj+ujxlp3+azELMl3xTorDFMInkUHqPcCGAXfNNK0zdMaZQ5l6BcL6vpPEAgGQlE+4eFf6NFxbCAXVeoL//Cw6FmTo3BXJiAKwXhA1yDqOHAdhc1Ko8zeSam3Vy6sF38+AdNFAOZOwfQHHttEcdKcYlN+i55zZ6i1mMi4D8MfGTppiEF5TEWhVkShQpdVoFeRMaJCsHkNxQy9t8bMMivJmFkz fk-mysql-deployer@debian" >> /home/fk-mysql-deployer/.ssh/authorized_keys
+        chown -R fk-mysql-deployer /home/fk-mysql-deployer
+        chmod 400 /home/fk-mysql-deployer/.ssh/authorized_keys
+fi
+exit 0

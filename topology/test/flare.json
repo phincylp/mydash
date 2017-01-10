@@ -1,0 +1,1 @@
+{"name": "retail-cpl-db1.nm.domain.com", "parent": "null", "children": [{"name": "retail-cpl-db-1.nm.domain.com", "parent": "retail-cpl-db1.nm.domain.com", "children": [{"name": "retail-cpl-db-2.nm.domain.com", "parent": "retail-cpl-db-1.nm.domain.com"}, {"name": "retail-cpl-db-5.nm.domain.com", "parent": "retail-cpl-db-1.nm.domain.com"}]}]}

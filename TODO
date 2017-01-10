@@ -1,0 +1,69 @@
+#
+
+
+
+ADDING HOSTS
+===
+Input: 
+	Hostname
+	Cluster Name
+
+1. Check if Host is already there.
+	- Yes
+		Show error
+	- No
+		Check if master
+			- Yes
+				Add New entry - Host
+			- No
+				Check if master already exists, cross check cluster_name(usually not a problem)
+					- Yes
+						Add New Entry - Host
+					- No
+						Add New Entry - Master
+						Add New Entry - Host
+
+Table Structure
+===
+###################
+mysql> grant all privileges on mysql_dashboard.* to mydash_rw@'10.%' identified by 'jasyfd6';
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> grant all privileges on mysql_dashboard.* to mydash_rw@'localhost' identified by 'jasyfd6';
+Query OK, 0 rows affected (0.00 sec)
+###################
+
+mysql> desc mysql_dashboard.inventory;
++----------------+--------------+------+-----+---------+----------------+
+| Field          | Type         | Null | Key | Default | Extra          |
++----------------+--------------+------+-----+---------+----------------+
+| ID             | int(11)      | NO   | PRI | NULL    | auto_increment |
+| dbhost         | varchar(255) | NO   | UNI | NULL    |                |
+| cluster_name   | varchar(255) | NO   |     | NULL    |                |
+| master_host    | varchar(255) | YES  |     | NULL    |                |
+| status         | int(11)      | YES  |     | 1       |                |
+| cluster_status | int(11)      | YES  |     | 1       |                |
+| userpath       | varchar(255) | YES  |     | YES     |                |
+| orderpath      | varchar(255) | YES  |     | NO      |                |
++----------------+--------------+------+-----+---------+----------------+
+8 rows in set (0.00 sec)
+###################
+
+Listing on Front Page
+===
+List by Cluster Name
+
+1. Check if 'Cluster Status' is 1
+	- No
+		Do not list on page
+	- Yes
+		- Get all 'dbhost' where 'Status' = 1
+		- Select 'Master Host'
+		- Display by 'Cluster Name'
+
+
+		
+	
+
+
+
